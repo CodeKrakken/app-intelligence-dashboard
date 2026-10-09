@@ -53,4 +53,5 @@ describe('App', () => {
       screen.getByText('Monitor your applications in one place.'),
     ).toBeInTheDocument();
   });
+
 });
