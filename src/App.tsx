@@ -12,6 +12,7 @@ function App() {
 
       <main>
         <h2>Overview</h2>
+        <p>Monitor your applications in one place.</p>
       </main>
     </>
   );

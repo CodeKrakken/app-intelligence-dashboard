@@ -45,4 +45,12 @@ describe('App', () => {
       screen.getByRole('heading', { name: 'Overview', level: 2 }),
     ).toBeInTheDocument();
   });
+
+  it('renders a description of the Overview page', () => {
+    render(<App />);
+
+    expect(
+      screen.getByText('Monitor your applications in one place.'),
+    ).toBeInTheDocument();
+  });
 });
