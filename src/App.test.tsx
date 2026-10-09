@@ -37,4 +37,12 @@ describe('App', () => {
     expect(screen.getByRole('banner')).toBeInTheDocument();
     expect(screen.getByRole('main')).toBeInTheDocument();
   });
+
+  it('renders the Overview page heading', () => {
+    render(<App />);
+
+    expect(
+      screen.getByRole('heading', { name: 'Overview', level: 2 }),
+    ).toBeInTheDocument();
+  });
 });

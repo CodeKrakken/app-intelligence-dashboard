@@ -10,7 +10,9 @@ function App() {
         </nav>
       </header>
 
-      <main />
+      <main>
+        <h2>Overview</h2>
+      </main>
     </>
   );
 }
