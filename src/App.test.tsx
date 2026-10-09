@@ -22,4 +22,19 @@ describe('App', () => {
       screen.getByRole('link', { name: 'Applications' }),
     ).toBeInTheDocument();
   });
+
+  it('identifies Overview as the current page', () => {
+    render(<App />);
+
+    expect(
+      screen.getByRole('link', { name: 'Overview' }),
+    ).toHaveAttribute('aria-current', 'page');
+  });
+
+  it('provides header and main content landmarks', () => {
+    render(<App />);
+
+    expect(screen.getByRole('banner')).toBeInTheDocument();
+    expect(screen.getByRole('main')).toBeInTheDocument();
+  });
 });
