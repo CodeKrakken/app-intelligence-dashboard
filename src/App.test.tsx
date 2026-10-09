@@ -54,4 +54,12 @@ describe('App', () => {
     ).toBeInTheDocument();
   });
 
+  it('labels the main navigation accessibly', () => {
+    render(<App />);
+
+    expect(
+      screen.getByRole('navigation', { name: 'Main navigation' }),
+    ).toBeInTheDocument();
+  });
+
 });
