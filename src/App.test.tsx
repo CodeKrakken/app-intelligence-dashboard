@@ -62,4 +62,12 @@ describe('App', () => {
     ).toBeInTheDocument();
   });
 
+  it('displays applications on the Overview page', () => {
+    render(<App />);
+
+    expect(
+      screen.getByRole('heading', { name: 'Payment API' }),
+    ).toBeInTheDocument();
+  });
+
 });
