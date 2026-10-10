@@ -24,3 +24,9 @@ dist-ssr
 *.sw?
 
 coverage
+
+backend/log/ 
+backend/tmp/
+backend/storage/ 
+backend/.kamal/secrets
+backend/config/master.key
