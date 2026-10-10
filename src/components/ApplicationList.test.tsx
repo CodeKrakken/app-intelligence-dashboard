@@ -1,0 +1,23 @@
+import { describe, expect, it } from 'vitest';
+import { render, screen } from '@testing-library/react';
+import type { Application } from '../types';
+import ApplicationList from './ApplicationList';
+
+describe('ApplicationList', () => {
+  it('renders a card for each application', () => {
+    const applications: Application[] = [
+      { id: 'app-1', name: 'Payment API', status: 'healthy' },
+      { id: 'app-2', name: 'Customer Portal', status: 'warning' },
+    ];
+
+    render(<ApplicationList applications={applications} />);
+
+    expect(
+      screen.getByRole('heading', { name: 'Payment API' }),
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByRole('heading', { name: 'Customer Portal' }),
+    ).toBeInTheDocument();
+  });
+});
