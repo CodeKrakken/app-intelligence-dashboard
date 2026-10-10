@@ -1,4 +1,4 @@
-import ApplicationList from './components/ApplicationList';
+import ApplicationList from './components/ApplicationList/ApplicationList';
 import type { Application } from './types';
 
 const applications: Application[] = [

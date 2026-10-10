@@ -1,5 +1,5 @@
-import type { Application } from '../types';
-import ApplicationCard from './ApplicationCard';
+import type { Application } from '../../types';
+import ApplicationCard from '../ApplicationCard/ApplicationCard';
 
 type ApplicationListProps = {
   applications: Application[];

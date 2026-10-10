@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import type { Application } from '../types';
+import type { Application } from '../../types';
 import ApplicationCard from './ApplicationCard';
 
 describe('ApplicationCard', () => {
@@ -53,5 +53,19 @@ describe('ApplicationCard', () => {
     expect(
       screen.getByRole('article', { name: 'Payment API' }),
     ).toBeInTheDocument();
+  });
+
+    it('exposes the application status semantically', () => {
+    render(
+      <ApplicationCard
+        application={{
+          id: 'app-1',
+          name: 'Payment API',
+          status: 'healthy',
+        }}
+      />,
+    );
+
+    expect(screen.getByRole('status')).toHaveTextContent('healthy');
   });
 });

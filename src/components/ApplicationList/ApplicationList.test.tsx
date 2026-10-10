@@ -1,8 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import type { Application } from '../types';
+import type { Application } from '../../types';
 import ApplicationList from './ApplicationList';
-import ApplicationCard from './ApplicationCard';
 
 describe('ApplicationList', () => {
   it('renders a card for each application', () => {
@@ -67,18 +66,18 @@ describe('ApplicationList', () => {
     expect(screen.getByText('Customer Portal')).toBeInTheDocument();
     expect(screen.getByText('Reporting Service')).toBeInTheDocument();
   });
-
-  it('exposes the application status semantically', () => {
+  
+  it('renders one article for each application', () => {
     render(
-      <ApplicationCard
-        application={{
-          id: 'app-1',
-          name: 'Payment API',
-          status: 'healthy',
-        }}
+      <ApplicationList
+        applications={[
+          { id: 'app-1', name: 'Payment API', status: 'healthy' },
+          { id: 'app-2', name: 'Customer Portal', status: 'warning' },
+        ]}
       />,
     );
 
-    expect(screen.getByRole('status')).toHaveTextContent('healthy');
+    expect(screen.getAllByRole('article')).toHaveLength(2);
   });
+
 });
