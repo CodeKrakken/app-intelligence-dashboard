@@ -39,4 +39,19 @@ describe('ApplicationCard', () => {
     ).toBeInTheDocument();
   });
 
+  it('exposes each application as an article named after the application', () => {
+    render(
+      <ApplicationCard
+        application={{
+          id: 'app-1',
+          name: 'Payment API',
+          status: 'healthy',
+        }}
+      />,
+    );
+
+    expect(
+      screen.getByRole('article', { name: 'Payment API' }),
+    ).toBeInTheDocument();
+  });
 });
