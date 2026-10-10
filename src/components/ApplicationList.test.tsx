@@ -28,4 +28,26 @@ describe('ApplicationList', () => {
       screen.getByText('No applications to display.'),
     ).toBeInTheDocument();
   });
+
+  it('displays only applications matching the selected status', () => {
+    const applications: Application[] = [
+      { id: 'app-1', name: 'Payment API', status: 'healthy' },
+      { id: 'app-2', name: 'Customer Portal', status: 'warning' },
+    ];
+
+    render(
+      <ApplicationList
+        applications={applications}
+        statusFilter="healthy"
+      />,
+    );
+
+    expect(
+      screen.getByRole('heading', { name: 'Payment API' }),
+    ).toBeInTheDocument();
+
+    expect(
+      screen.queryByRole('heading', { name: 'Customer Portal' }),
+    ).not.toBeInTheDocument();
+  });
 });

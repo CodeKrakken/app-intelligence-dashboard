@@ -3,16 +3,29 @@ import ApplicationCard from './ApplicationCard';
 
 type ApplicationListProps = {
   applications: Application[];
+  statusFilter?: Application['status'];
 };
 
-function ApplicationList({ applications }: ApplicationListProps) {
+function ApplicationList({
+  applications,
+  statusFilter,
+}: ApplicationListProps) {
+  const filteredApplications = statusFilter
+    ? applications.filter(
+        (application) => application.status === statusFilter,
+      )
+    : applications;
+
   return (
     <section aria-label="Applications">
-      {applications.length === 0 ? (
+      {filteredApplications.length === 0 ? (
         <p>No applications to display.</p>
       ) : (
-        applications.map((application) => (
-          <ApplicationCard key={application.id} application={application} />
+        filteredApplications.map((application) => (
+          <ApplicationCard
+            key={application.id}
+            application={application}
+          />
         ))
       )}
     </section>
