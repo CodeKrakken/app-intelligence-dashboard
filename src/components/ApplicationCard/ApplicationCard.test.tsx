@@ -55,7 +55,7 @@ describe('ApplicationCard', () => {
     ).toBeInTheDocument();
   });
 
-    it('exposes the application status semantically', () => {
+  it('exposes the application status semantically', () => {
     render(
       <ApplicationCard
         application={{

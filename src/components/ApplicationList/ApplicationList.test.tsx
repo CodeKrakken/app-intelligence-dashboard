@@ -80,4 +80,30 @@ describe('ApplicationList', () => {
     expect(screen.getAllByRole('article')).toHaveLength(2);
   });
 
+  it('provides an accessible name for the applications section', () => {
+    render(<ApplicationList applications={[]} />);
+
+    expect(
+      screen.getByRole('region', { name: 'Applications' }),
+    ).toBeInTheDocument();
+  });
+
+  it('does not mutate the original applications array when filtering', () => {
+    const applications = [
+      { id: 'app-1', name: 'Payment API', status: 'healthy' as const },
+      { id: 'app-2', name: 'Customer Portal', status: 'warning' as const },
+    ];
+
+    const originalApplications = [...applications];
+
+    render(
+      <ApplicationList
+        applications={applications}
+        statusFilter="healthy"
+      />,
+    );
+
+    expect(applications).toEqual(originalApplications);
+  });
+
 });
