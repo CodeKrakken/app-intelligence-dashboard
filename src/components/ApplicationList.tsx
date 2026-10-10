@@ -8,9 +8,13 @@ type ApplicationListProps = {
 function ApplicationList({ applications }: ApplicationListProps) {
   return (
     <section aria-label="Applications">
-      {applications.map((application) => (
-        <ApplicationCard key={application.id} application={application} />
-      ))}
+      {applications.length === 0 ? (
+        <p>No applications to display.</p>
+      ) : (
+        applications.map((application) => (
+          <ApplicationCard key={application.id} application={application} />
+        ))
+      )}
     </section>
   );
 }

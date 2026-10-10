@@ -20,4 +20,12 @@ describe('ApplicationList', () => {
       screen.getByRole('heading', { name: 'Customer Portal' }),
     ).toBeInTheDocument();
   });
+
+  it('displays a message when there are no applications', () => {
+    render(<ApplicationList applications={[]} />);
+
+    expect(
+      screen.getByText('No applications to display.'),
+    ).toBeInTheDocument();
+  });
 });
