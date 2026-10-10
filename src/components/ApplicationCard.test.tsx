@@ -19,4 +19,24 @@ describe('ApplicationCard', () => {
 
     expect(screen.getByText('healthy')).toBeInTheDocument();
   });
+  
+  it('renders the application name as a level-two heading', () => {
+    render(
+      <ApplicationCard
+        application={{
+          id: 'app-1',
+          name: 'Payment API',
+          status: 'healthy',
+        }}
+      />,
+    );
+
+    expect(
+      screen.getByRole('heading', {
+        level: 2,
+        name: 'Payment API',
+      }),
+    ).toBeInTheDocument();
+  });
+
 });
