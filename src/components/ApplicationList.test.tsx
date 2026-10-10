@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import type { Application } from '../types';
 import ApplicationList from './ApplicationList';
+import ApplicationCard from './ApplicationCard';
 
 describe('ApplicationList', () => {
   it('renders a card for each application', () => {
@@ -49,5 +50,35 @@ describe('ApplicationList', () => {
     expect(
       screen.queryByRole('heading', { name: 'Customer Portal' }),
     ).not.toBeInTheDocument();
+  });
+
+  it('displays all applications when no status filter is supplied', () => {
+    render(
+      <ApplicationList
+        applications={[
+          { id: 'app-1', name: 'Payment API', status: 'healthy' },
+          { id: 'app-2', name: 'Customer Portal', status: 'warning' },
+          { id: 'app-3', name: 'Reporting Service', status: 'error' },
+        ]}
+      />,
+    );
+
+    expect(screen.getByText('Payment API')).toBeInTheDocument();
+    expect(screen.getByText('Customer Portal')).toBeInTheDocument();
+    expect(screen.getByText('Reporting Service')).toBeInTheDocument();
+  });
+
+  it('exposes the application status semantically', () => {
+    render(
+      <ApplicationCard
+        application={{
+          id: 'app-1',
+          name: 'Payment API',
+          status: 'healthy',
+        }}
+      />,
+    );
+
+    expect(screen.getByRole('status')).toHaveTextContent('healthy');
   });
 });

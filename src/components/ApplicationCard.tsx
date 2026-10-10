@@ -8,7 +8,7 @@ function ApplicationCard({ application }: ApplicationCardProps) {
   return (
     <article>
       <h2>{application.name}</h2>
-      <p>{application.status}</p>
+      <p role="status">{application.status}</p>
     </article>
   );
 }
