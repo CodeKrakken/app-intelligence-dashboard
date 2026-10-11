@@ -1,7 +1,7 @@
 module Api
   class AppsController < ApplicationController
     def index
-      render json: []
+      render json: App.all
     end
   end
 end
