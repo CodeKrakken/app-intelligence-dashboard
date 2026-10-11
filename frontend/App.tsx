@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link, Route, Routes, useLocation } from 'react-router';
 import { useQuery } from '@tanstack/react-query';
 import { fetchApplications } from './api/applications';
@@ -26,15 +27,19 @@ function Navigation() {
   );
 }
 
+function useApplications() {
+  return useQuery({
+    queryKey: ['applications'],
+    queryFn: fetchApplications,
+  });
+}
+
 function OverviewPage() {
   const {
     data: applications = [],
     isPending,
     isError,
-  } = useQuery({
-    queryKey: ['applications'],
-    queryFn: fetchApplications,
-  });
+  } = useApplications();
 
   return (
     <>
@@ -54,18 +59,40 @@ function ApplicationsPage() {
     data: applications = [],
     isPending,
     isError,
-  } = useQuery({
-    queryKey: ['applications'],
-    queryFn: fetchApplications,
-  });
+  } = useApplications();
+  const [categoryFilter, setCategoryFilter] = useState('');
+
+  const categories = [...new Set(applications.map((app) => app.category))]
+    .sort();
 
   return (
     <>
       <h2>Applications</h2>
+
       {isPending && <p>Loading applications...</p>}
       {isError && <p role="alert">Failed to load applications.</p>}
+
       {!isPending && !isError && (
-        <ApplicationList applications={applications} />
+        <>
+          <label htmlFor="category-filter">Filter by category</label>
+          <select
+            id="category-filter"
+            value={categoryFilter}
+            onChange={(event) => setCategoryFilter(event.target.value)}
+          >
+            <option value="">All categories</option>
+            {categories.map((category) => (
+              <option key={category} value={category}>
+                {category}
+              </option>
+            ))}
+          </select>
+
+          <ApplicationList
+            applications={applications}
+            categoryFilter={categoryFilter || undefined}
+          />
+        </>
       )}
     </>
   );

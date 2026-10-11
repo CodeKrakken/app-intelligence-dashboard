@@ -136,4 +136,42 @@ describe('App', () => {
     vi.unstubAllGlobals();
   });
 
+  it('filters applications by category on the Applications page', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        ok: true,
+        json: async () => [
+          {
+            id: 1,
+            name: 'Payment API',
+            category: 'Finance',
+            publisher: 'Example Publisher',
+          },
+          {
+            id: 2,
+            name: 'Analytics App',
+            category: 'Analytics',
+            publisher: 'Data Company',
+          },
+        ],
+      }),
+    );
+
+    renderWithQueryClient(<App />);
+
+    fireEvent.click(screen.getByRole('link', { name: 'Applications' }));
+
+    const categoryFilter = await screen.findByRole('combobox', {
+      name: 'Filter by category',
+    });
+
+    fireEvent.change(categoryFilter, { target: { value: 'Finance' } });
+
+    expect(screen.getByText('Payment API')).toBeInTheDocument();
+    expect(screen.queryByText('Analytics App')).not.toBeInTheDocument();
+
+    vi.unstubAllGlobals();
+  });
+
 });
