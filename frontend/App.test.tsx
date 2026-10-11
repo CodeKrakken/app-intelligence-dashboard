@@ -1,7 +1,20 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, jest } from '@jest/globals';
 import { fireEvent, screen } from '@testing-library/react';
 import { renderWithQueryClient } from './test/renderWithQueryClient';
 import App from './App';
+
+const originalFetch = globalThis.fetch;
+
+function mockApplicationsFetch(applications: unknown[]) {
+  globalThis.fetch = jest.fn<typeof fetch>().mockResolvedValue({
+    ok: true,
+    json: async () => applications,
+  } as Response);
+}
+
+afterEach(() => {
+  globalThis.fetch = originalFetch;
+});
 
 describe('App', () => {
   it('renders the dashboard heading', () => {
@@ -15,13 +28,8 @@ describe('App', () => {
   it('provides navigation to the main dashboard sections', () => {
     renderWithQueryClient(<App />);
 
-    expect(
-      screen.getByRole('link', { name: 'Overview' }),
-    ).toBeInTheDocument();
-
-    expect(
-      screen.getByRole('link', { name: 'Applications' }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Overview' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Applications' })).toBeInTheDocument();
   });
 
   it('identifies Overview as the current page', () => {
@@ -64,63 +72,41 @@ describe('App', () => {
   });
 
   it('displays applications on the Overview page', async () => {
-    vi.stubGlobal(
-      'fetch',
-      vi.fn().mockResolvedValue({
-        ok: true,
-        json: async () => [
-          {
-            id: 1,
-            name: 'Payment API',
-            category: 'Finance',
-            publisher: 'Example Publisher',
-          },
-        ],
-      }),
-    );
+    mockApplicationsFetch([
+      {
+        id: 1,
+        name: 'Payment API',
+        category: 'Finance',
+        publisher: 'Example Publisher',
+      },
+    ]);
 
     renderWithQueryClient(<App />);
 
     expect(
       await screen.findByRole('heading', { name: 'Payment API' }),
     ).toBeInTheDocument();
-
-    vi.unstubAllGlobals();
   });
 
   it('displays applications returned by the API', async () => {
-    vi.stubGlobal(
-      'fetch',
-      vi.fn().mockResolvedValue({
-        ok: true,
-        json: async () => [
-          {
-            id: '1',
-            name: 'Analytics App',
-            category: 'Productivity',
-            publisher: 'Example Publisher',
-          },
-        ],
-      }),
-    );
+    mockApplicationsFetch([
+      {
+        id: 1,
+        name: 'Analytics App',
+        category: 'Productivity',
+        publisher: 'Example Publisher',
+      },
+    ]);
 
     renderWithQueryClient(<App />);
 
     expect(
       await screen.findByRole('heading', { name: 'Analytics App' }),
     ).toBeInTheDocument();
-
-    vi.unstubAllGlobals();
   });
 
   it('navigates to the Applications page', async () => {
-    vi.stubGlobal(
-      'fetch',
-      vi.fn().mockResolvedValue({
-        ok: true,
-        json: async () => [],
-      }),
-    );
+    mockApplicationsFetch([]);
 
     renderWithQueryClient(<App />);
 
@@ -132,31 +118,23 @@ describe('App', () => {
         level: 2,
       }),
     ).toBeInTheDocument();
-
-    vi.unstubAllGlobals();
   });
 
   it('filters applications by category on the Applications page', async () => {
-    vi.stubGlobal(
-      'fetch',
-      vi.fn().mockResolvedValue({
-        ok: true,
-        json: async () => [
-          {
-            id: 1,
-            name: 'Payment API',
-            category: 'Finance',
-            publisher: 'Example Publisher',
-          },
-          {
-            id: 2,
-            name: 'Analytics App',
-            category: 'Analytics',
-            publisher: 'Data Company',
-          },
-        ],
-      }),
-    );
+    mockApplicationsFetch([
+      {
+        id: 1,
+        name: 'Payment API',
+        category: 'Finance',
+        publisher: 'Example Publisher',
+      },
+      {
+        id: 2,
+        name: 'Analytics App',
+        category: 'Analytics',
+        publisher: 'Data Company',
+      },
+    ]);
 
     renderWithQueryClient(<App />);
 
@@ -170,8 +148,5 @@ describe('App', () => {
 
     expect(screen.getByText('Payment API')).toBeInTheDocument();
     expect(screen.queryByText('Analytics App')).not.toBeInTheDocument();
-
-    vi.unstubAllGlobals();
   });
-
 });
