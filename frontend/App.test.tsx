@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { screen } from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/react';
 import { renderWithQueryClient } from './test/renderWithQueryClient';
 import App from './App';
 
@@ -108,6 +108,29 @@ describe('App', () => {
 
     expect(
       await screen.findByRole('heading', { name: 'Analytics App' }),
+    ).toBeInTheDocument();
+
+    vi.unstubAllGlobals();
+  });
+
+  it('navigates to the Applications page', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        ok: true,
+        json: async () => [],
+      }),
+    );
+
+    renderWithQueryClient(<App />);
+
+    fireEvent.click(screen.getByRole('link', { name: 'Applications' }));
+
+    expect(
+      await screen.findByRole('heading', {
+        name: 'Applications',
+        level: 2,
+      }),
     ).toBeInTheDocument();
 
     vi.unstubAllGlobals();
