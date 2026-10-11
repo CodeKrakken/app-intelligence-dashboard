@@ -1,109 +1,75 @@
 import { describe, expect, it } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import type { Application } from '../../types';
 import ApplicationList from './ApplicationList';
+import type { Application } from '../../types';
+
+const applications: Application[] = [
+  {
+    id: 1,
+    name: 'Payment API',
+    category: 'Finance',
+    publisher: 'Example Publisher',
+  },
+  {
+    id: 2,
+    name: 'Analytics App',
+    category: 'Analytics',
+    publisher: 'Data Company',
+  },
+];
 
 describe('ApplicationList', () => {
   it('renders a card for each application', () => {
-    const applications: Application[] = [
-      { id: 'app-1', name: 'Payment API', status: 'healthy' },
-      { id: 'app-2', name: 'Customer Portal', status: 'warning' },
-    ];
-
     render(<ApplicationList applications={applications} />);
 
-    expect(
-      screen.getByRole('heading', { name: 'Payment API' }),
-    ).toBeInTheDocument();
-
-    expect(
-      screen.getByRole('heading', { name: 'Customer Portal' }),
-    ).toBeInTheDocument();
+    expect(screen.getByText('Payment API')).toBeInTheDocument();
+    expect(screen.getByText('Analytics App')).toBeInTheDocument();
   });
 
   it('displays a message when there are no applications', () => {
     render(<ApplicationList applications={[]} />);
 
-    expect(
-      screen.getByText('No applications to display.'),
-    ).toBeInTheDocument();
+    expect(screen.getByText('No applications to display.')).toBeInTheDocument();
   });
 
-  it('displays only applications matching the selected status', () => {
-    const applications: Application[] = [
-      { id: 'app-1', name: 'Payment API', status: 'healthy' },
-      { id: 'app-2', name: 'Customer Portal', status: 'warning' },
-    ];
-
-    render(
-      <ApplicationList
-        applications={applications}
-        statusFilter="healthy"
-      />,
-    );
-
-    expect(
-      screen.getByRole('heading', { name: 'Payment API' }),
-    ).toBeInTheDocument();
-
-    expect(
-      screen.queryByRole('heading', { name: 'Customer Portal' }),
-    ).not.toBeInTheDocument();
-  });
-
-  it('displays all applications when no status filter is supplied', () => {
-    render(
-      <ApplicationList
-        applications={[
-          { id: 'app-1', name: 'Payment API', status: 'healthy' },
-          { id: 'app-2', name: 'Customer Portal', status: 'warning' },
-          { id: 'app-3', name: 'Reporting Service', status: 'error' },
-        ]}
-      />,
-    );
+  it('renders all applications when no category filter is supplied', () => {
+    render(<ApplicationList applications={applications} />);
 
     expect(screen.getByText('Payment API')).toBeInTheDocument();
-    expect(screen.getByText('Customer Portal')).toBeInTheDocument();
-    expect(screen.getByText('Reporting Service')).toBeInTheDocument();
+    expect(screen.getByText('Analytics App')).toBeInTheDocument();
   });
-  
-  it('renders one article for each application', () => {
-    render(
-      <ApplicationList
-        applications={[
-          { id: 'app-1', name: 'Payment API', status: 'healthy' },
-          { id: 'app-2', name: 'Customer Portal', status: 'warning' },
-        ]}
-      />,
-    );
+
+  it('renders each application as an article', () => {
+    render(<ApplicationList applications={applications} />);
 
     expect(screen.getAllByRole('article')).toHaveLength(2);
   });
 
   it('provides an accessible name for the applications section', () => {
-    render(<ApplicationList applications={[]} />);
+    render(<ApplicationList applications={applications} />);
 
     expect(
       screen.getByRole('region', { name: 'Applications' }),
     ).toBeInTheDocument();
   });
 
-  it('does not mutate the original applications array when filtering', () => {
-    const applications = [
-      { id: 'app-1', name: 'Payment API', status: 'healthy' as const },
-      { id: 'app-2', name: 'Customer Portal', status: 'warning' as const },
-    ];
-
+  it('does not mutate the applications array', () => {
     const originalApplications = [...applications];
 
-    render(
-      <ApplicationList
-        applications={applications}
-        statusFilter="healthy"
-      />,
-    );
+    render(<ApplicationList applications={applications} />);
 
     expect(applications).toEqual(originalApplications);
   });
 
+  it('filters applications by category when a category filter is supplied', () => {
+    render(
+      <ApplicationList
+        applications={applications}
+        categoryFilter="Finance"
+      />,
+    );
+
+    expect(screen.getByText('Payment API')).toBeInTheDocument();
+    expect(screen.queryByText('Analytics App')).not.toBeInTheDocument();
+  });
 });

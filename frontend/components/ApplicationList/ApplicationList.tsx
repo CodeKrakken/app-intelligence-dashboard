@@ -3,16 +3,16 @@ import ApplicationCard from '../ApplicationCard/ApplicationCard';
 
 type ApplicationListProps = {
   applications: Application[];
-  statusFilter?: Application['status'];
+  categoryFilter?: Application['category'];
 };
 
 function ApplicationList({
   applications,
-  statusFilter,
+  categoryFilter,
 }: ApplicationListProps) {
-  const filteredApplications = statusFilter
+  const filteredApplications = categoryFilter
     ? applications.filter(
-        (application) => application.status === statusFilter,
+        (application) => application.category === categoryFilter,
       )
     : applications;
 
@@ -22,10 +22,7 @@ function ApplicationList({
         <p>No applications to display.</p>
       ) : (
         filteredApplications.map((application) => (
-          <ApplicationCard
-            key={application.id}
-            application={application}
-          />
+          <ApplicationCard key={application.id} application={application} />
         ))
       )}
     </section>
