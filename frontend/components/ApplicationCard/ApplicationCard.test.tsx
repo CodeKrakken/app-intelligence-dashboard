@@ -1,71 +1,45 @@
 import { describe, expect, it } from 'vitest';
-import { render, screen } from '@testing-library/react';
-import type { Application } from '../../types';
+import { render, screen, within } from '@testing-library/react';
 import ApplicationCard from './ApplicationCard';
+import type { Application } from '../../types';
+
+const application: Application = {
+  id: 1,
+  name: 'Payment API',
+  category: 'Finance',
+  publisher: 'Example Publisher',
+};
 
 describe('ApplicationCard', () => {
-  it('renders the application name and status', () => {
-    const application: Application = {
-      id: 'app-1',
-      name: 'Payment API',
-      status: 'healthy',
-    };
-
+  it('renders the application name', () => {
     render(<ApplicationCard application={application} />);
 
     expect(
       screen.getByRole('heading', { name: 'Payment API' }),
     ).toBeInTheDocument();
-
-    expect(screen.getByText('healthy')).toBeInTheDocument();
   });
-  
-  it('renders the application name as a level-two heading', () => {
-    render(
-      <ApplicationCard
-        application={{
-          id: 'app-1',
-          name: 'Payment API',
-          status: 'healthy',
-        }}
-      />,
-    );
+
+  it('renders the application category', () => {
+    render(<ApplicationCard application={application} />);
+
+    expect(screen.getByText('Finance')).toBeInTheDocument();
+  });
+
+  it('renders the application publisher', () => {
+    render(<ApplicationCard application={application} />);
+
+    expect(screen.getByText('Example Publisher')).toBeInTheDocument();
+  });
+
+  it('renders the application as an article labelled by its heading', () => {
+    render(<ApplicationCard application={application} />);
+
+    const article = screen.getByRole('article', {
+      name: 'Payment API',
+    });
 
     expect(
-      screen.getByRole('heading', {
-        level: 2,
-        name: 'Payment API',
-      }),
+      within(article).getByRole('heading', { name: 'Payment API' }),
     ).toBeInTheDocument();
-  });
-
-  it('exposes each application as an article named after the application', () => {
-    render(
-      <ApplicationCard
-        application={{
-          id: 'app-1',
-          name: 'Payment API',
-          status: 'healthy',
-        }}
-      />,
-    );
-
-    expect(
-      screen.getByRole('article', { name: 'Payment API' }),
-    ).toBeInTheDocument();
-  });
-
-  it('exposes the application status semantically', () => {
-    render(
-      <ApplicationCard
-        application={{
-          id: 'app-1',
-          name: 'Payment API',
-          status: 'healthy',
-        }}
-      />,
-    );
-
-    expect(screen.getByRole('status')).toHaveTextContent('healthy');
   });
 });

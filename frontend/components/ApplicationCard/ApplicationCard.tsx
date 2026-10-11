@@ -10,7 +10,8 @@ function ApplicationCard({ application }: ApplicationCardProps) {
   return (
     <article aria-labelledby={headingId}>
       <h2 id={headingId}>{application.name}</h2>
-      <p role="status">{application.status}</p>
+      <p>{application.category}</p>
+      <p>{application.publisher}</p>
     </article>
   );
 }
